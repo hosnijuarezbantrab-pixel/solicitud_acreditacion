@@ -180,7 +180,6 @@ export class FirmaIntegrationService {
       return { disponible: false, url: process.env.FIRMA_SERVICE_URL || 'http://localhost:3002' };
     }
   }
-}
 
   // ── G-11 FIX: OTP doble verificación ─────────────────────────────────────
 
@@ -194,7 +193,7 @@ export class FirmaIntegrationService {
     telefono: string,
     email: string,
     ipOrigen?: string,
-  ): Promise<{ ok: boolean; mensaje: string; _demo_token?: string }> {
+  ): Promise<{ ok: boolean; mensaje?: string; _demo_token?: string }> {
     try {
       const solicitudId = `OTP-${accId}-${Date.now()}`;
       const res = await this.generarToken(
@@ -226,20 +225,18 @@ export class FirmaIntegrationService {
     tokenEmail: string,
   ): Promise<{ ok: boolean }> {
     if (!tokenSms || !tokenEmail) {
-      throw new (await import('@nestjs/common').then(m => m.BadRequestException))(
-        'Ambos códigos son requeridos.',
-      );
+      throw new BadRequestException('Ambos códigos son requeridos.');
     }
     // Ambos tokens deben coincidir (mismo código en este flujo simplificado)
     if (tokenSms !== tokenEmail) {
-      throw new (await import('@nestjs/common').then(m => m.BadRequestException))(
+      throw new BadRequestException(
         'Los códigos no coinciden. Verifique e intente nuevamente.',
       );
     }
     // Verificar contra el microservicio de firma
     const estado = await this.consultarEstadoToken(tokenSms);
     if (estado.estado !== 'ACTIVO') {
-      throw new (await import('@nestjs/common').then(m => m.BadRequestException))(
+      throw new BadRequestException(
         estado.estado === 'USADO'
           ? 'Los códigos ya fueron utilizados.'
           : 'Los códigos han expirado. Solicite nuevos códigos.',
@@ -247,3 +244,4 @@ export class FirmaIntegrationService {
     }
     return { ok: true };
   }
+}
