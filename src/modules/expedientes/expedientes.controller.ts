@@ -94,15 +94,8 @@ export class ExpedientesController {
   ) {
     return this.svc.validarAsociarVotos(ta, asamblea, exp, tipoDoc, tipo);
   }
-}
 
-// ── G-10 FIX: endpoints adicionales que el frontend llama ──────────────────
-
-/**
- * POST /api/expedientes/crear — crearExpediente0080 del frontend
- * En el backend el flujo de creación pasa por POST /acreditacion.
- * Este endpoint es un alias que redirige al flujo de acreditación individual.
- */
+  // ── G-10 FIX: endpoints adicionales que el frontend llama ──────────────────
 
   /**
    * G-10 FIX: GET /api/expedientes/:exp/detalle
@@ -128,3 +121,4 @@ export class ExpedientesController {
   async validarAsociarVotos(@Param('exp', ParseIntPipe) exp: number) {
     return { puedeAsociar: true, totalVotosActual: 0, aviso: null };
   }
+}
