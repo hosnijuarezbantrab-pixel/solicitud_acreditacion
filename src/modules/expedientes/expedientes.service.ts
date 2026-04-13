@@ -421,7 +421,6 @@ export class ExpedientesService {
     const d = hasta.getDate()     - desde.getDate();
     return Math.max(0, a * 12 + m + (d < 0 ? -1 : 0));
   }
-}
 
   // ── G-10 FIX: métodos adicionales ─────────────────────────────────────────
 
@@ -447,3 +446,4 @@ export class ExpedientesService {
       );
     } catch { return []; }
   }
+}
